@@ -1,0 +1,71 @@
+Metadata-Version: 2.4
+Name: tokopedia-api-wrapper
+Version: 0.0.1
+Summary: Tokopedia Python API Wrapper SDK.
+Home-page: https://github.com/fuongz/auto-switch-providers
+Author: fuongz
+Author-email: hi@phuongphung.com
+License: MIT
+Project-URL: Bug Reports, https://github.com/fuongz/auto-switch-providers/issues
+Project-URL: Source, https://github.com/fuongz/auto-switch-providers
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: Operating System :: OS Independent
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Requires-Python: >=3.8, <4
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: certifi==2025.4.26
+Requires-Dist: charset-normalizer==3.4.2
+Requires-Dist: coverage==7.8.2
+Requires-Dist: flake8==7.2.0
+Requires-Dist: idna==3.10
+Requires-Dist: iniconfig==2.1.0
+Requires-Dist: marshmallow==4.0.0
+Requires-Dist: mccabe==0.7.0
+Requires-Dist: packaging==25.0
+Requires-Dist: pluggy==1.6.0
+Requires-Dist: pycodestyle==2.13.0
+Requires-Dist: pyflakes==3.3.2
+Requires-Dist: Pygments==2.19.1
+Requires-Dist: pytest==8.4.0
+Requires-Dist: pytest-cov==6.1.1
+Requires-Dist: requests==2.32.3
+Requires-Dist: setuptools==80.9.0
+Requires-Dist: tqdm==4.67.1
+Requires-Dist: urllib3==2.4.0
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: keywords
+Dynamic: license
+Dynamic: license-file
+Dynamic: project-url
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
+# Tokopedia Python SDK
+
+This is an unofficial Python SDK for Tokopedia (Indonesian e-commerce platform). The project is still under development.
+
+## Libraries used
+
+This project uses the following libraries:
+
+- [requests](https://requests.readthedocs.io/en/master/) for making HTTP requests
+- [marshmallow](https://marshmallow.readthedocs.io/en/stable/) for serializing and deserializing JSON data
+- [urllib3](https://urllib3.readthedocs.io/en/latest/) for making secure HTTP requests
+- [tqdm](https://tqdm.github.io/) for displaying progress bars
+- [flake8](https://flake8.pycqa.org/en/latest/) for code formatting and linting
+
+## License
+
+- [MIT](./LICENSE)
