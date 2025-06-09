@@ -1,5 +1,8 @@
 # Tokopedia Python SDK
 
+![Codecov](https://img.shields.io/codecov/c/gh/fuongz/tokopedia-api-wrapper?style=for-the-badge&token=1WV304VPMZ)
+![PyPI - Version](https://img.shields.io/pypi/v/tokopedia-api-wrapper?style=for-the-badge)
+
 This is an unofficial Python SDK for Tokopedia (Indonesian e-commerce platform). The project is still under development.
 
 ## Libraries used
