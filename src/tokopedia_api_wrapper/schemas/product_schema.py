@@ -1,6 +1,6 @@
 from marshmallow import EXCLUDE, Schema, fields, pre_load
 
-from tokopedia_api_wrapper.utils.transform import (
+from ..utils.transform import (
     convert_currency_string_to_int,
     convert_rb_string_to_numeric,
 )
@@ -88,7 +88,7 @@ class ProductSchema(Schema):
             if ri_product_credibility and ri_product_credibility["title"]
             else 0
         )
-        data["discount"] = ri_ribbon.get("title", "0%")
+        data["discount"] = ri_ribbon.get("title", "0%") if ri_ribbon else "0%"
         data["tiktok_shop_seller_id"] = (
             data["shop"]["ttsSellerID"]
             if data["shop"] and data["shop"]["ttsSellerID"]

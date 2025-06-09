@@ -1,6 +1,6 @@
 from marshmallow import EXCLUDE, Schema, fields, pre_load
 
-from tokopedia_api_wrapper.schemas.product_schema import ProductSchema
+from .product_schema import ProductSchema
 
 
 class ResponseSchema(Schema):

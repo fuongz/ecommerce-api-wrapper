@@ -6,9 +6,9 @@ import tqdm
 from tqdm.contrib.concurrent import thread_map, process_map
 import urllib3
 
-from src.tokopedia_api_wrapper.utils.faker import TokopediaFaker
-from tokopedia_api_wrapper.schemas import ResponseSchema
-from tokopedia_api_wrapper.constants import TokopediaConstants
+from .utils.faker import TokopediaFaker
+from .schemas.response_schema import ResponseSchema
+from .constants import TokopediaConstants
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
