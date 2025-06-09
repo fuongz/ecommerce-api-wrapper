@@ -1,7 +1,7 @@
 __title__ = "tokopedia-api-wrapper"
 __description__ = "Tokopedia Python API Wrapper SDK."
 __url__ = "https://github.com/fuongz/tokopedia-api-wrapper"
-__version__ = "0.0.1"
+__version__ = "0.0.2"
 __author__ = "fuongz"
 __author_email__ = "hi@phuongphung.com"
 __license__ = "MIT"
