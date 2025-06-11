@@ -118,7 +118,7 @@ class Lazada:
                         json = response.json()
                     except Exception as e:
                         self._log(f"[kw={keyword}] JSON Error: {str(e)}")
-                        continue
+                        break
                     transformed = ResponseSchema().load({**json, "keyword": keyword})
                     cur_products = transformed.get("products", [])
                     products += cur_products

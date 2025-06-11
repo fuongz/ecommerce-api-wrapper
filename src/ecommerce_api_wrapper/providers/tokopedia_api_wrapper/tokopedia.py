@@ -158,7 +158,7 @@ class Tokopedia:
                         json = response.json()
                     except Exception as e:
                         self._log(f"[kw={keyword}] JSON Error: {str(e)}")
-                        continue
+                        break
                     cur_additional_params = (
                         json.get("data", {})
                         .get("searchProductV5", {})
