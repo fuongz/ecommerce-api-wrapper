@@ -118,7 +118,13 @@ class Lazada:
                         json = response.json()
                     except Exception as e:
                         self._log(f"[kw={keyword}] JSON Error: {str(e)}")
-                        break
+                        retry_count += 1
+                        if retry_count >= self.max_retry:
+                            print(
+                                f"⛔️ [kw={keyword}] Collected {len(products)} products!"
+                            )
+                            break
+                        continue
                     transformed = ResponseSchema().load({**json, "keyword": keyword})
                     cur_products = transformed.get("products", [])
                     products += cur_products

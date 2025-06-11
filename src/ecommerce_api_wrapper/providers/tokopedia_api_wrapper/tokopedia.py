@@ -158,7 +158,13 @@ class Tokopedia:
                         json = response.json()
                     except Exception as e:
                         self._log(f"[kw={keyword}] JSON Error: {str(e)}")
-                        break
+                        retry_count += 1
+                        if retry_count >= self.max_retry:
+                            print(
+                                f"⛔️ [kw={keyword}] Collected {len(products)} products!"
+                            )
+                            break
+                        continue
                     cur_additional_params = (
                         json.get("data", {})
                         .get("searchProductV5", {})
