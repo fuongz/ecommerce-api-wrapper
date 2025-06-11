@@ -154,7 +154,11 @@ class Tokopedia:
                 )
                 if response and response.status_code == 200:
                     retry_count = 0
-                    json = response.json()
+                    try:
+                        json = response.json()
+                    except Exception as e:
+                        self._log(f"[kw={keyword}] JSON Error: {str(e)}")
+                        continue
                     cur_additional_params = (
                         json.get("data", {})
                         .get("searchProductV5", {})

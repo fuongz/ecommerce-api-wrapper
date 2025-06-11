@@ -68,10 +68,15 @@ class Lazada:
         page_number = 1
         while True:
             try:
+                api_url = (
+                    LazadaConstants.API_URLS[self.country_code]
+                    if self.country_code in LazadaConstants.API_URLS
+                    else f'{LazadaConstants.API_URLS["default"]}{self.country_code}'
+                )
                 headers = {
                     **LazadaConstants.HEADERS,
                     "User-Agent": Faker.user_agent(),
-                    "Referer": f"{LazadaConstants.API_URL}{self.country_code}",
+                    "Referer": f"{api_url}",
                 }
                 start = (page_number - 1) * 40 if page_number > 1 else 0
                 if retry_count > 0:
@@ -83,7 +88,7 @@ class Lazada:
                         f"[kw={keyword}] Fetching page {page_number} (start from {start})..."
                     )
                 response = None
-                endpoint = f"{LazadaConstants.API_URL}{self.country_code}/{self.search_type}/?ajax=true&isFirstRequest=true&page={page_number}&q={encoded_keyword}"
+                endpoint = f"{api_url}/{self.search_type}/?ajax=true&isFirstRequest=true&page={page_number}&q={encoded_keyword}"
 
                 start_time = perf_counter()
                 with self.session as session:
@@ -109,7 +114,11 @@ class Lazada:
                 )
                 if response and response.status_code == 200:
                     retry_count = 0
-                    json = response.json()
+                    try:
+                        json = response.json()
+                    except Exception as e:
+                        self._log(f"[kw={keyword}] JSON Error: {str(e)}")
+                        continue
                     transformed = ResponseSchema().load({**json, "keyword": keyword})
                     cur_products = transformed.get("products", [])
                     products += cur_products
