@@ -10,19 +10,19 @@ class ProductSchema(Schema):
     class Meta:
         unknown = EXCLUDE
 
-    id = fields.String(required=True, allow_none=False)
+    id = fields.Integer(required=True, allow_none=False)
     tiktok_shop_product_id = fields.String(required=True, allow_none=False)
-    tiktok_shop_sku_id = fields.String(required=True, allow_none=True)
+    tiktok_shop_sku_id = fields.Integer(required=True, allow_none=True)
     name = fields.String(required=True, allow_none=True)
     url = fields.String(required=True, allow_none=True)
     app_link = fields.String(required=True, allow_none=True, data_key="applink")
     image = fields.String(required=True, allow_none=True)
-    price = fields.Integer(required=True, allow_none=True)
-    price_original = fields.Integer(required=True, allow_none=True)
-    shop_id = fields.String(required=True, allow_none=True)
+    price = fields.Float(required=True, allow_none=True)
+    price_original = fields.Float(required=True, allow_none=True)
+    shop_id = fields.Integer(required=True, allow_none=True)
     shop_name = fields.String(required=True, allow_none=True)
     shop_url = fields.String(required=True, allow_none=True)
-    tiktok_shop_seller_id = fields.String(required=True, allow_none=True)
+    tiktok_shop_seller_id = fields.Integer(required=True, allow_none=True)
     rating = fields.Float(required=True, allow_none=True)
     sold_count = fields.Integer(required=True, allow_none=True)
     discount = fields.String(required=True, allow_none=True)
@@ -30,12 +30,16 @@ class ProductSchema(Schema):
 
     @pre_load()
     def pre_load(self, data, many, **kwargs):
-        data["rating"] = float(data.get("rating", "0.0"))
+        data["rating"] = (
+            float(data.get("rating"))
+            if data.get("rating") != "" and data.get("rating")
+            else 0.0
+        )
         data["tiktok_shop_product_id"] = (
             data["ttsProductID"] if data["ttsProductID"] else None
         )
         data["tiktok_shop_sku_id"] = (
-            data["stock"]["ttsSKUID"]
+            int(data["stock"]["ttsSKUID"])
             if data["stock"] and data["stock"]["ttsSKUID"]
             else None
         )
@@ -56,7 +60,7 @@ class ProductSchema(Schema):
 
         data["image"] = data.get("mediaURL", {}).get("image300", None)
         data["shop_id"] = (
-            data["shop"]["id"] if data["shop"] and data["shop"]["id"] else None
+            int(data["shop"]["id"]) if data["shop"] and data["shop"]["id"] else None
         )
         data["shop_name"] = (
             data["shop"]["name"] if data["shop"] and data["shop"]["name"] else None
@@ -90,8 +94,11 @@ class ProductSchema(Schema):
         )
         data["discount"] = ri_ribbon.get("title", "0%") if ri_ribbon else "0%"
         data["tiktok_shop_seller_id"] = (
-            data["shop"]["ttsSellerID"]
+            int(data["shop"]["ttsSellerID"])
             if data["shop"] and data["shop"]["ttsSellerID"]
             else None
         )
+
+        # Calculate total_gmv
+        data["total_gmv"] = data["price"] * data["sold_count"]
         return data

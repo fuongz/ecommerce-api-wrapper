@@ -1,4 +1,4 @@
-from time import sleep
+from time import perf_counter, sleep
 from typing import Dict, List, Tuple
 import requests
 import urllib.parse
@@ -51,11 +51,18 @@ class Tokopedia:
         self.max_page: int = max_page
         self.max_retry: int = max_retry
 
+        # Proxy
+        self.proxy_index: int = 0
+
         if self.proxies and self.proxies_headers:
             print("🚀 Proxies enabled")
             self.session = requests.Session()
             if self.proxies:
-                self.session.proxies = self.proxies
+                self.session.proxies = (
+                    self.proxies[self.proxy_index]
+                    if isinstance(self.proxies, list)
+                    else self.proxies
+                )
             if self.proxies_headers:
                 self.session.headers = self.proxies_headers
         else:
@@ -93,7 +100,7 @@ class Tokopedia:
             raise ValueError("Invalid concurrent type")
 
     def _log(self, message, *args, **kws):
-        if self.debug:
+        if self.debug is True:
             tqdm.tqdm.write(message, *args, **kws)
 
     def _search_products(self, keyword: str) -> List[Dict]:
@@ -122,9 +129,6 @@ class Tokopedia:
         page_number = 1
         additional_params = ""
         while True:
-            if page_number > self.max_page + 1:
-                self._log(f"✅ [kw={keyword}] Collected {len(products)} products!")
-                break
             try:
                 unique_id = TokopediaFaker.unique_id()
                 device_id = TokopediaFaker.device_id()
@@ -157,6 +161,7 @@ class Tokopedia:
                 }
                 endpoint = f"{TokopediaConstants.GRAPHQL_URL}/{TokopediaConstants.PATH_SEARCH_PRODUCTS}"
 
+                start_time = perf_counter()
                 with self.session as session:
                     if self.proxies:
                         headers = {**headers, **self.proxies_headers}
@@ -164,7 +169,6 @@ class Tokopedia:
                             endpoint,
                             headers=headers,
                             json=dict_data,
-                            proxies=self.proxies,
                             verify=False,
                             timeout=(self.connection_timeout, self.read_timeout),
                         )
@@ -175,6 +179,10 @@ class Tokopedia:
                             json=dict_data,
                             timeout=(self.connection_timeout, self.read_timeout),
                         )
+                end_time = perf_counter()
+                self._log(
+                    f"--> [kw={keyword}] Fetched time: {end_time - start_time} seconds!"
+                )
                 if response and response.status_code == 200:
                     retry_count = 0
                     json = response.json()
@@ -189,8 +197,14 @@ class Tokopedia:
                     transformed = ResponseSchema().load({**json, "keyword": keyword})
                     cur_products = transformed.get("products", [])
                     products += cur_products
-                    sleep(1)
+                    if not self.proxies:
+                        sleep(1)
                     page_number += 1
+                    if page_number > self.max_page:
+                        self._log(
+                            f"✅ [kw={keyword}] Collected {len(products)} products!"
+                        )
+                        break
 
             except requests.Timeout as e:
                 self._log(f"[kw={keyword}] {str(e)}")
@@ -198,6 +212,14 @@ class Tokopedia:
                 if retry_count >= self.max_retry:
                     print(f"⛔️ [kw={keyword}] Collected {len(products)} products!")
                     break
+                if isinstance(self.proxies, list):
+                    next_index = (
+                        self.proxy_index + 1
+                        if self.proxy_index < len(self.proxies) - 1
+                        else 0
+                    )
+                    self.proxy_index += next_index
+                    self.session.proxies = self.proxies[next_index]
                 sleep(self.sleep_time)
                 continue
 
