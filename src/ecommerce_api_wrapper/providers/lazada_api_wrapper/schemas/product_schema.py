@@ -61,4 +61,5 @@ class ProductSchema(Schema):
         data["sku"] = data.get("sku")
         data["sku_id"] = data.get("skuId")
         data["cheapest_sku"] = data.get("cheapest_sku")
+        data["total_gmv"] = data["price"] * data["sold_count"]
         return data
