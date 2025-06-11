@@ -3,6 +3,7 @@ from marshmallow import EXCLUDE, Schema, fields, pre_load
 from ....utils.transform import (
     convert_currency_string_to_int,
     convert_rb_string_to_numeric,
+    convert_string_to_slug,
 )
 
 
@@ -66,8 +67,11 @@ class ProductSchema(Schema):
         data["shop_name"] = (
             data["shop"]["name"] if data["shop"] and data["shop"]["name"] else None
         )
+        seller_slug = convert_string_to_slug(data["shop_name"])
         data["shop_url"] = (
-            data["shop"]["url"] if data["shop"] and data["shop"]["url"] else None
+            data["shop"]["url"]
+            if data["shop"] and data["shop"]["url"]
+            else f"https://www.tokopedia.com/{seller_slug}"
         )
 
         # labelGroups
