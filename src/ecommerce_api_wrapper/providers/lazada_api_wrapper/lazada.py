@@ -30,11 +30,11 @@ class Lazada:
         # HTTP Client config
         self.proxies = proxies
         self.proxies_headers = proxies_headers or {}
-        self.connection_timeout: int = timeout
+        self.connection_timeout: int = timeout or LazadaConstants.TIMEOUT
         self.read_timeout = LazadaConstants.READ_TIMEOUT
-        self.sleep_time: int = sleep_time
-        self.max_page: int = max_page
-        self.max_retry: int = max_retry
+        self.sleep_time: int = sleep_time or LazadaConstants.SLEEP_TIME
+        self.max_page: int = max_page or LazadaConstants.MAX_PAGE
+        self.max_retry: int = max_retry or LazadaConstants.MAX_RETRY
         self.country_code: str = country_code.lower()
         self.search_type: str = search_type
 

@@ -44,11 +44,11 @@ class Tokopedia:
         # HTTP Client config
         self.proxies = proxies
         self.proxies_headers = proxies_headers or {}
-        self.connection_timeout: int = timeout
+        self.connection_timeout: int = timeout or TokopediaConstants.TIMEOUT
         self.read_timeout = TokopediaConstants.READ_TIMEOUT
-        self.sleep_time: int = sleep_time
-        self.max_page: int = max_page
-        self.max_retry: int = max_retry
+        self.sleep_time: int = sleep_time or TokopediaConstants.SLEEP_TIME
+        self.max_page: int = max_page or TokopediaConstants.MAX_PAGE
+        self.max_retry: int = max_retry or TokopediaConstants.MAX_RETRY
 
         # Proxy
         self.proxy_index: int = 0

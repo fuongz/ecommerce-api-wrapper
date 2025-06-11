@@ -21,6 +21,7 @@ class ProductSchema(Schema):
     brand_name = fields.String(required=True, allow_none=True)
     brand_id = fields.Integer(required=True, allow_none=True)
     shop_id = fields.Integer(required=True, allow_none=True)
+    total_gmv = fields.Float(required=True, allow_none=True)
     shop_name = fields.String(required=True, allow_none=True)
     shop_url = fields.String(required=True, allow_none=True)
     rating = fields.Float(required=True, allow_none=True)

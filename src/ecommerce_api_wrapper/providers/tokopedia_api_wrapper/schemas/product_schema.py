@@ -19,6 +19,7 @@ class ProductSchema(Schema):
     image = fields.String(required=True, allow_none=True)
     price = fields.Float(required=True, allow_none=True)
     price_original = fields.Float(required=True, allow_none=True)
+    total_gmv = fields.Float(required=True, allow_none=True)
     shop_id = fields.Integer(required=True, allow_none=True)
     shop_name = fields.String(required=True, allow_none=True)
     shop_url = fields.String(required=True, allow_none=True)
