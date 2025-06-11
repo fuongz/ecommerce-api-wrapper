@@ -1,13 +1,18 @@
 import unittest
 
-from src.tokopedia_api_wrapper.tokopedia import Tokopedia
+from src.ecommerce_api_wrapper.ecommerce_api_wrapper import (
+    EcommerceApiWrapper,
+)
 
 
 class CommonTest(unittest.TestCase):
     def setUp(self):
-        self.client = Tokopedia(debug=True, max_page=1, max_retry=1)
+        proxies = []
+        self.client = EcommerceApiWrapper(
+            ecom_type="lazada", debug=True, max_page=10, max_retry=1, proxies=proxies
+        )
 
     def test_search_products(self):
         keywords = ["xiaomi"]
-        response = self.client.parallel_search_products(keywords)
+        response = self.client.search_products(keywords)
         self.assertIsNotNone(response)

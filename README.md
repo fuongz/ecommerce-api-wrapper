@@ -1,9 +1,14 @@
-# Tokopedia Python SDK
+# Ecommerce API Wrapper - Python SDK
 
-![Codecov](https://img.shields.io/codecov/c/gh/fuongz/tokopedia-api-wrapper?style=for-the-badge&token=1WV304VPMZ)
-![PyPI - Version](https://img.shields.io/pypi/v/tokopedia-api-wrapper?style=for-the-badge)
+![Codecov](https://img.shields.io/codecov/c/gh/fuongz/ecommerce-api-wrapper?style=for-the-badge&token=1WV304VPMZ)
+![PyPI - Version](https://img.shields.io/pypi/v/ecommerce-api-wrapper?style=for-the-badge)
 
-This is an unofficial Python SDK for Tokopedia (Indonesian e-commerce platform). The project is still under development.
+This is an unofficial Python SDK for Popular Ecommerce (Tokopedia, Lazada). The project is still under development.
+
+## E-commerce APIs
+
+- [Tokopedia](https://www.tokopedia.com/) - Indonesian e-commerce company
+- [Lazada](https://www.lazada.com/)
 
 ## Libraries used
 

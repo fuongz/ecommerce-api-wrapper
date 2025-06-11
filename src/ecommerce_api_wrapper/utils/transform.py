@@ -5,7 +5,40 @@ def remove_alphabets_regex(input_string):
     return re.sub(r"[a-zA-Z]", "", input_string)
 
 
-import re
+def convert_to_number(s: str) -> int:
+    if not s:
+        return 0
+    s = s.strip().upper()
+    number_part = ""
+    multiplier = 1
+
+    for char in s:
+        if char.isdigit() or char == ".":
+            number_part += char
+        elif char == "K":
+            multiplier = 1_000
+            break
+        elif char == "M":
+            multiplier = 1_000_000
+            break
+        elif char == "B":
+            multiplier = 1_000_000_000
+            break
+
+    if not number_part:
+        return 0
+
+    return int(float(number_part) * multiplier)
+
+
+def calculate_discount(price, original_price):
+    if original_price is None:
+        return 0
+    return round((original_price - price) / original_price * 100, 2)
+
+
+def convert_string_to_slug(input_string: str, separator="-") -> str:
+    return input_string.lower().replace(" ", separator)
 
 
 def is_valid_rp_jt_format(currency_string):

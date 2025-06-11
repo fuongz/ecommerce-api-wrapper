@@ -11,7 +11,7 @@ long_description = (here / "README.md").read_text(encoding="utf-8")
 with open(here / "requirements.txt") as fp:
     install_reqs = [r.rstrip() for r in fp.readlines() if not r.startswith("#")]
 
-with open(here / "src/tokopedia_api_wrapper/__version__.py", "r") as f:
+with open(here / "src/ecommerce_api_wrapper/__version__.py", "r") as f:
     exec(f.read(), about)
 
 
@@ -34,10 +34,10 @@ setup(
         "Programming Language :: Python :: 3.11",
     ],
     keywords="",
-    url="https://github.com/fuongz/auto-switch-providers",
+    url="https://github.com/fuongz/ecommerce-api-wrapper",
     project_urls={
-        "Bug Reports": "https://github.com/fuongz/auto-switch-providers/issues",
-        "Source": "https://github.com/fuongz/auto-switch-providers",
+        "Bug Reports": "https://github.com/fuongz/ecommerce-api-wrapper/issues",
+        "Source": "https://github.com/fuongz/ecommerce-api-wrapper",
     },
     license=about["__license__"],
     packages=find_packages("src", exclude=["tests"]),

@@ -6,8 +6,6 @@ class TokopediaConstants:
     MAX_RETRY = 10
     MAX_PAGE = 2
     SLEEP_TIME = 10
-    MAX_WORKERS = 5
-    CONCURRENT_TYPE = "thread"
 
     HEADERS = {
         "sec-ch-ua-platform": "macOS",

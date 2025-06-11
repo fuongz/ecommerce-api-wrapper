@@ -1,0 +1,12 @@
+[flake8]
+exclude = 
+    venv/*,
+    .git,
+    __pycache__,
+    build,
+    dist,
+    *.pyc,
+    core/*
+    src/ecommerce_api_wrapper/__init__.py
+max-line-length = 130
+extend-ignore = E501

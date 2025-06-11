@@ -4,7 +4,7 @@ import secrets
 import time
 
 
-class TokopediaFaker:
+class Faker:
     @staticmethod
     def unique_id():
         return secrets.token_hex(32 // 2)

@@ -1,6 +1,6 @@
 from marshmallow import EXCLUDE, Schema, fields, pre_load
 
-from ..utils.transform import (
+from ....utils.transform import (
     convert_currency_string_to_int,
     convert_rb_string_to_numeric,
 )

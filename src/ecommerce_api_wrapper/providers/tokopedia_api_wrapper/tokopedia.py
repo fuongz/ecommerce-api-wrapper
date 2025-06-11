@@ -1,10 +1,11 @@
 from time import perf_counter, sleep
-from typing import Dict, List, Tuple
+from typing import Dict, List
 import requests
 import urllib.parse
 import tqdm
-from tqdm.contrib.concurrent import thread_map, process_map
 import urllib3
+
+from ...utils.faker import Faker
 
 from .utils.faker import TokopediaFaker
 from .schemas.response_schema import ResponseSchema
@@ -18,13 +19,12 @@ class Tokopedia:
         self,
         debug=False,
         timeout=TokopediaConstants.TIMEOUT,
-        max_workers=TokopediaConstants.MAX_WORKERS,
-        concurrent_type=TokopediaConstants.CONCURRENT_TYPE,
         sleep_time=TokopediaConstants.SLEEP_TIME,
         max_page=TokopediaConstants.MAX_PAGE,
         max_retry=TokopediaConstants.MAX_RETRY,
         proxies=None,
         proxies_headers=None,
+        proxies_debug=False,
     ) -> None:
         """
         Initialize a TokopediaCrawler instance.
@@ -38,15 +38,14 @@ class Tokopedia:
             max_page (int, optional): The maximum number of pages to fetch. Defaults to 2.
             max_retry (int, optional): The maximum number of retries for each request. Defaults to 10.
         """
-        self.debug = debug
+        self.debug = debug or False
+        self.proxies_debug = proxies_debug or False
 
         # HTTP Client config
         self.proxies = proxies
-        self.proxies_headers = proxies_headers
-        self.max_workers: int = max_workers
+        self.proxies_headers = proxies_headers or {}
         self.connection_timeout: int = timeout
         self.read_timeout = TokopediaConstants.READ_TIMEOUT
-        self.concurrent_type: str = concurrent_type
         self.sleep_time: int = sleep_time
         self.max_page: int = max_page
         self.max_retry: int = max_retry
@@ -54,10 +53,9 @@ class Tokopedia:
         # Proxy
         self.proxy_index: int = 0
 
-        if self.proxies and self.proxies_headers:
-            print("🚀 Proxies enabled")
+        if self.proxies or self.proxies_headers:
             self.session = requests.Session()
-            if self.proxies:
+            if self.proxies and len(self.proxies) > 0:
                 self.session.proxies = (
                     self.proxies[self.proxy_index]
                     if isinstance(self.proxies, list)
@@ -67,37 +65,6 @@ class Tokopedia:
                 self.session.headers = self.proxies_headers
         else:
             self.session = requests.Session()
-
-    def parallel_search_products(
-        self, keywords: List[str]
-    ) -> Tuple[List[ResponseSchema], ...]:
-        """
-        Search for products in parallel using the given keywords.
-
-        Args:
-            keywords (List[str]): List of keywords to search for.
-
-        Returns:
-            Tuple[List[ResponseSchema], ...]: A tuple of lists of ResponseSchema,
-            where each list contains the products for the corresponding keyword.
-        """
-        max_workers = min(len(keywords), self.max_workers)
-        if self.concurrent_type == "thread":
-            return thread_map(
-                self._search_products,
-                keywords,
-                max_workers=max_workers,
-                desc="Searching products",
-            )
-        elif self.concurrent_type == "process":
-            return process_map(
-                self._search_products,
-                keywords,
-                max_workers=max_workers,
-            )
-
-        else:
-            raise ValueError("Invalid concurrent type")
 
     def _log(self, message, *args, **kws):
         if self.debug is True:
@@ -135,7 +102,7 @@ class Tokopedia:
 
                 headers = {
                     **TokopediaConstants.HEADERS,
-                    "User-Agent": TokopediaFaker.user_agent(),
+                    "User-Agent": Faker.user_agent(),
                     "bd-device-id": device_id,
                     "bd-web-id": device_id,
                     "iris_session_id": TokopediaFaker.iris_session_id(),
@@ -165,6 +132,8 @@ class Tokopedia:
                 with self.session as session:
                     if self.proxies:
                         headers = {**headers, **self.proxies_headers}
+                        if self.proxies_debug is True:
+                            self._proxy_check()
                         response = session.post(
                             endpoint,
                             headers=headers,
@@ -200,7 +169,7 @@ class Tokopedia:
                     if not self.proxies:
                         sleep(1)
                     page_number += 1
-                    if page_number > self.max_page:
+                    if len(products) == 0 or page_number > self.max_page:
                         self._log(
                             f"✅ [kw={keyword}] Collected {len(products)} products!"
                         )
@@ -220,7 +189,8 @@ class Tokopedia:
                     )
                     self.proxy_index += next_index
                     self.session.proxies = self.proxies[next_index]
-                sleep(self.sleep_time)
+                if not self.proxies:
+                    sleep(self.sleep_time)
                 continue
 
             except requests.ConnectionError as e:
@@ -243,3 +213,18 @@ class Tokopedia:
             return []
 
         return products
+
+    def _proxy_check(self):
+        try:
+            response = self.session.get("https://ip.oxylabs.io/location", verify=False)
+        except Exception:
+            return
+        if response.status_code == 200:
+            json_response = response.json()
+            ip_addr = json_response.get("ip", "Unknown")
+            country: str = (
+                json_response.get("providers", {})
+                .get("ip2location", {})
+                .get("country", "")
+            )
+            self._log(f"🚩 IP={ip_addr}, Country={country}")
