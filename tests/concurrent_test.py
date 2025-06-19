@@ -5,33 +5,31 @@ from src.ecommerce_api_wrapper.ecommerce_api_wrapper import (
 )
 
 
-class CommonTest(unittest.TestCase):
+class ConcurrentTest(unittest.TestCase):
     def setUp(self):
         self.proxies = []
         self.keywords = ["xiaomi"]
 
-    def test_not_implemented(self):
-        with self.assertRaises(NotImplementedError):
-            self.client = EcommerceApiWrapper(ecom_type="shoppe")
-
-    def test_lazada_search_products(self):
-        self.client = EcommerceApiWrapper(
-            ecom_type="lazada",
-            debug=True,
-            max_page=1,
-            max_retry=1,
-            proxies=self.proxies,
-        )
-        response = self.client.search_products(self.keywords)
-        self.assertIsNotNone(response)
-
-    def test_tokopedia_search_products(self):
+    def test_with_thread(self):
         self.client = EcommerceApiWrapper(
             ecom_type="tokopedia",
             debug=True,
             max_page=1,
             max_retry=1,
             proxies=self.proxies,
+            concurrent_type="thread",
+        )
+        response = self.client.search_products(self.keywords)
+        self.assertIsNotNone(response)
+
+    def test_with_process(self):
+        self.client = EcommerceApiWrapper(
+            ecom_type="tokopedia",
+            debug=True,
+            max_page=1,
+            max_retry=1,
+            proxies=self.proxies,
+            concurrent_type="process",
         )
         response = self.client.search_products(self.keywords)
         self.assertIsNotNone(response)
