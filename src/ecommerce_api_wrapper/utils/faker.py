@@ -1,7 +1,6 @@
 import string
 import random
 import secrets
-import time
 
 
 class Faker:
@@ -16,11 +15,6 @@ class Faker:
         hex_str = random_str.encode("ascii").hex()
         decimal_token = int(hex_str, 16)
         return str(decimal_token)
-
-    @staticmethod
-    def iris_session_id():
-        second_part = secrets.token_hex(16)
-        return f"d3d3LnRva29wZWRpYS5jb20=.{second_part}.{round(time.time())}"
 
     @staticmethod
     def user_agent():

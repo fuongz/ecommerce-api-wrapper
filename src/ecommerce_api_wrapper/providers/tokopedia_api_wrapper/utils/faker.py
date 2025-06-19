@@ -20,4 +20,7 @@ class TokopediaFaker:
     @staticmethod
     def iris_session_id():
         second_part = secrets.token_hex(16)
-        return f"d3d3LnRva29wZWRpYS5jb20=.{second_part}.{round(time.time())}"
+        # "www.tokopedia.com" ---b64encode---> "d3d3LnRva29wZWRpYS5jb20="
+        base64_part = "d3d3LnRva29wZWRpYS5jb20="
+        current_time = round(time.time())
+        return f"{base64_part}.{second_part}.{current_time}"
